@@ -21,7 +21,7 @@ const render = () => {
   ReactDOM.render(<App store={store}/>, document.getElementById('container'))
 }
 
-render();
 store.subscribe(render);
+store.dispatch({})
 
 require('../test/index-test.js'); // Leave this in!

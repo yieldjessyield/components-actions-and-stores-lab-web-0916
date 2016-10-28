@@ -1,7 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import expect from 'expect';
-import sinon from 'sinon';
 
 import App from '../src/components/app';
 import { createStore } from '../src/store';
