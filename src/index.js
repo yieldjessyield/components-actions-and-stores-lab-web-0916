@@ -3,25 +3,16 @@ import ReactDOM from 'react-dom';
 
 import { createStore } from './store';
 
-import App from './components/app';
-
-
-const bandReducer = (state=[], action) => {
-  switch (action.type) {
-    case 'ADD_BAND':
-      return [...state, action.payload];
-    default:
-      return state;
-  }
-}
+import BandInput from './components/band_input_component';
+import bandReducer from './reducers/band_reducer.js';
 
 const store = createStore(bandReducer);
 
-const render = () => {
-  ReactDOM.render(<App store={store}/>, document.getElementById('container'))
+const renderApp = () => {
+  ReactDOM.render(<BandInput store={store}/>, document.getElementById('container'))
 }
 
-store.subscribe(render);
+store.subscribe(renderApp);
 store.dispatch({})
 
 require('../test/index-test.js'); // Leave this in!

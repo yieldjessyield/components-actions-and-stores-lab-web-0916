@@ -1,13 +1,13 @@
 import expect from 'expect';
 
-import jsdom from 'jsdom';
+import { jsdom, createVirtualConsole } from 'jsdom';
 import path from 'path';
 import { transformFileSync } from 'babel-core';
 
 import fs from 'fs';
 
 const html = fs.readFileSync(path.resolve(__dirname, '..', 'index.html'));
-global.document = jsdom.jsdom(html);
+global.document = jsdom(html);
 global.window = document.defaultView;
 
 before(function(done) {
@@ -19,7 +19,7 @@ before(function(done) {
 
   jsdom.env(html, [], {
     src: babelResult.code,
-    virtualConsole: jsdom.createVirtualConsole().sendTo(console)
+    // virtualConsole: createVirtualConsole().sendTo(console)
   }, (err, window) => {
     if (err) {
       return done(err);
