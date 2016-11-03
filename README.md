@@ -1,18 +1,13 @@
 # Components, Actions, and Stores
 
 ## Overview
-
+In this codealong we will build out a simple band listing application, which will demonstrate user interaction with flux.
 
 ## Objectives
 1. Explain the results of a user interaction with a component
 2. Describe the return value of an action
 3. Describe how a store responds to new data
 4. Describe how a store broadcasts data
-
-## Outline
-1. .dispatch() is the way to trigger a state change
-2. .subscribe(listener) listens for .dispatch(). Called anytime an action is dispatched
-
 
 We now have a basic idea of how our components should interact with the store's `state`. Let's apply this knowledge and show exactly how it is done. This code along will help demonstrate when and how `state` should be handled when a user interacts with our application.
 
