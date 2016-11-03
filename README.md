@@ -13,7 +13,7 @@ We now have a basic idea of how our components should interact with the store's 
 
 We will be building out a very simple concert venue band list. The application will allow the adding of new bands, the removal of old bands and diplaying each band on one page.
 
-![final-view](https://s3.amazonaws.com/learn-verified/redux-components-actions-stores-view.png?X-Amz-Date=20161103T185744Z&X-Amz-Expires=300&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Signature=397cd91feb34a4067ea4f2bd13ed90266f61fea38d786832d290f8e2f1f3cd74&X-Amz-Credential=ASIAJ7SD7DMG6RNL4DUQ/20161103/us-east-1/s3/aws4_request&X-Amz-SignedHeaders=Host&x-amz-security-token=FQoDYXdzEKr//////////wEaDMqbA2x8zZ8dUGz1jCL6AVRRPzfbfIvO2VDwk6lytpXxxBEinX0qjq5Rpv9C/MozfltS1W7JUzoGXAunZh5vexyEej7159TzuoDrYouWAH/1hAYLIcxFupi4y3g%2BaxWzJzaqzz0z9bthfFFmYMimFUUhilzrH/A%2BMvlEWsWysowBk2kgIjFvoSTnpp5noTDXeTJQTsnr/TekP1V4cvl79PnKHef5rVTc9BA5gW0N%2BbPZThcMKOV8j1qGsCmuNewqBedQEDvN%2BNaxan3lQJngU3%2BPH6VxDm98tDhY3ooe2Sv3Ec3za9kP7qEfi6XlOaXLWRCeDK83tMILa8Wphyg4pywl5GAK/ya5CSwonc3twAU%3D)
+![final-view](https://s3.amazonaws.com/learn-verified/redux-components-actions-stores-view.png)
 
 Before we begin let's think about what is needed in React to build out this application. We'll need to mock out our components so that we have a template to build towards. This will help our application building process and shrink our need to "figure it out as we go" (possibly leading to later hours of refactoring). 
 
@@ -22,7 +22,7 @@ As we can see in the picture above our application will need an input field to e
 1. `band_input_component` will handle our band input logic.
 2. `band_index_component` will only diplay the bands.
 
-![component-view](https://s3.amazonaws.com/learn-verified/redux-components-stores-actions-lab-component-view.png?X-Amz-Date=20161103T190245Z&X-Amz-Expires=300&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Signature=71d15c52028205d8d1fbcd4d1ded50a30c8f37f6083de9ec44cc25d74f7386a0&X-Amz-Credential=ASIAJ7SD7DMG6RNL4DUQ/20161103/us-east-1/s3/aws4_request&X-Amz-SignedHeaders=Host&x-amz-security-token=FQoDYXdzEKr//////////wEaDMqbA2x8zZ8dUGz1jCL6AVRRPzfbfIvO2VDwk6lytpXxxBEinX0qjq5Rpv9C/MozfltS1W7JUzoGXAunZh5vexyEej7159TzuoDrYouWAH/1hAYLIcxFupi4y3g%2BaxWzJzaqzz0z9bthfFFmYMimFUUhilzrH/A%2BMvlEWsWysowBk2kgIjFvoSTnpp5noTDXeTJQTsnr/TekP1V4cvl79PnKHef5rVTc9BA5gW0N%2BbPZThcMKOV8j1qGsCmuNewqBedQEDvN%2BNaxan3lQJngU3%2BPH6VxDm98tDhY3ooe2Sv3Ec3za9kP7qEfi6XlOaXLWRCeDK83tMILa8Wphyg4pywl5GAK/ya5CSwonc3twAU%3D)
+![component-view](https://s3.amazonaws.com/learn-verified/redux-components-stores-actions-lab-component-view.png)
 
 The image above is a visual representation of how our components should be broken out. 
 
