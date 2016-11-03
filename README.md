@@ -18,7 +18,7 @@ We now have a basic idea of how our components should interact with the store's 
 
 We will be building out a very simple concert venue band list. The application will allow the adding of new bands, the removal of old bands and diplaying each band on one page.
 
-### <Insert Picture of what we're building>
+![final-view](https://s3.amazonaws.com/learn-verified/redux-components-actions-stores-view.png?X-Amz-Date=20161103T185744Z&X-Amz-Expires=300&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Signature=397cd91feb34a4067ea4f2bd13ed90266f61fea38d786832d290f8e2f1f3cd74&X-Amz-Credential=ASIAJ7SD7DMG6RNL4DUQ/20161103/us-east-1/s3/aws4_request&X-Amz-SignedHeaders=Host&x-amz-security-token=FQoDYXdzEKr//////////wEaDMqbA2x8zZ8dUGz1jCL6AVRRPzfbfIvO2VDwk6lytpXxxBEinX0qjq5Rpv9C/MozfltS1W7JUzoGXAunZh5vexyEej7159TzuoDrYouWAH/1hAYLIcxFupi4y3g%2BaxWzJzaqzz0z9bthfFFmYMimFUUhilzrH/A%2BMvlEWsWysowBk2kgIjFvoSTnpp5noTDXeTJQTsnr/TekP1V4cvl79PnKHef5rVTc9BA5gW0N%2BbPZThcMKOV8j1qGsCmuNewqBedQEDvN%2BNaxan3lQJngU3%2BPH6VxDm98tDhY3ooe2Sv3Ec3za9kP7qEfi6XlOaXLWRCeDK83tMILa8Wphyg4pywl5GAK/ya5CSwonc3twAU%3D)
 
 Before we begin let's think about what is needed in React to build out this application. We'll need to mock out our components so that we have a template to build towards. This will help our application building process and shrink our need to "figure it out as we go" (possibly leading to later hours of refactoring). 
 
@@ -26,6 +26,14 @@ As we can see in the picture above our application will need an input field to e
 
 1. `band_input_component` will handle our band input logic.
 2. `band_index_component` will only diplay the bands.
+
+![component-view](https://s3.amazonaws.com/learn-verified/redux-components-stores-actions-lab-component-view.png?X-Amz-Date=20161103T190245Z&X-Amz-Expires=300&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Signature=71d15c52028205d8d1fbcd4d1ded50a30c8f37f6083de9ec44cc25d74f7386a0&X-Amz-Credential=ASIAJ7SD7DMG6RNL4DUQ/20161103/us-east-1/s3/aws4_request&X-Amz-SignedHeaders=Host&x-amz-security-token=FQoDYXdzEKr//////////wEaDMqbA2x8zZ8dUGz1jCL6AVRRPzfbfIvO2VDwk6lytpXxxBEinX0qjq5Rpv9C/MozfltS1W7JUzoGXAunZh5vexyEej7159TzuoDrYouWAH/1hAYLIcxFupi4y3g%2BaxWzJzaqzz0z9bthfFFmYMimFUUhilzrH/A%2BMvlEWsWysowBk2kgIjFvoSTnpp5noTDXeTJQTsnr/TekP1V4cvl79PnKHef5rVTc9BA5gW0N%2BbPZThcMKOV8j1qGsCmuNewqBedQEDvN%2BNaxan3lQJngU3%2BPH6VxDm98tDhY3ooe2Sv3Ec3za9kP7qEfi6XlOaXLWRCeDK83tMILa8Wphyg4pywl5GAK/ya5CSwonc3twAU%3D)
+
+The image above is a visual representation of how our components should be broken out. 
+
+1. is the full application and refers to our *`index.js`* file
+2. is our *`band_input_component`*, which will handle the user input and also wrap our *`band_index_component`*
+3. - 5. show our *`band_index_component`*. Each of these components will display only one of the bands.
 
 Because our `band_index_component` is only displaying data from `band_input_component` we can make it a functional child component. Our `band_input_component` will hold all of the logic for the two components and pass down only the relevant information for `band_index_component` to display.
 
@@ -123,7 +131,7 @@ We'll import our reducer into `index.js` then start to build out our parent comp
 
 We have our store, our reducer, but no actual way to display or interact with the application. We'll create a new component in `src/components/band_input_component.js` and import it into our `index.js`. The last piece before we start actually building out our component is making sure our `index.js` mounts the `band_input_component` when our application initially loads. `Member how to do this?
 
-### <insert memberberries picture>
+![member-berries](https://res.cloudinary.com/teepublic/image/private/s--cJq1pb1m--/t_Preview/b_rgb:191919,c_limit,f_jpg,h_630,q_90,w_630/v1474073671/production/designs/685741_1.jpg)
 
 `ReactDOM.render(<BandInput />, document.getElementById('container'))`
 
@@ -154,7 +162,7 @@ ReactDOM.render(<BandInput store={store}/>, document.getElementById('container')
 
 Now we'll have access to `store` inside our components!
 
-### <insert adventure time "yeah boi" gif>
+![adventure-time](https://67.media.tumblr.com/8b4632d33e55d71de51bbdbf275d98ad/tumblr_n8bljrS9Fl1rom85wo1_500.gif)
 
 When creating a new component there is one question that you should always ask yourself: will this component be class based or just a functional component? In other words will our component hold a lot of logic to change state or will our component simply need to display information from state?
 
