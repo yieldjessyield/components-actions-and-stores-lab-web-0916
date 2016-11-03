@@ -1,7 +1,7 @@
 # Components, Actions, and Stores
 
 ## Overview
-
+In this codealong we will build out a simple band listing application, which will demonstrate user interaction with flux.
 
 ## Objectives
 1. Explain the results of a user interaction with a component
@@ -9,16 +9,11 @@
 3. Describe how a store responds to new data
 4. Describe how a store broadcasts data
 
-## Outline
-1. .dispatch() is the way to trigger a state change
-2. .subscribe(listener) listens for .dispatch(). Called anytime an action is dispatched
-
-
 We now have a basic idea of how our components should interact with the store's `state`. Let's apply this knowledge and show exactly how it is done. This code along will help demonstrate when and how `state` should be handled when a user interacts with our application.
 
 We will be building out a very simple concert venue band list. The application will allow the adding of new bands, the removal of old bands and diplaying each band on one page.
 
-### <Insert Picture of what we're building>
+![final-view](https://s3.amazonaws.com/learn-verified/redux-components-actions-stores-view.png)
 
 Before we begin let's think about what is needed in React to build out this application. We'll need to mock out our components so that we have a template to build towards. This will help our application building process and shrink our need to "figure it out as we go" (possibly leading to later hours of refactoring). 
 
@@ -26,6 +21,14 @@ As we can see in the picture above our application will need an input field to e
 
 1. `band_input_component` will handle our band input logic.
 2. `band_index_component` will only diplay the bands.
+
+![component-view](https://s3.amazonaws.com/learn-verified/redux-components-stores-actions-lab-component-view.png)
+
+The image above is a visual representation of how our components should be broken out. 
+
+1. is the full application and refers to our *`index.js`* file
+2. is our *`band_input_component`*, which will handle the user input and also wrap our *`band_index_component`*
+3. - 5. show our *`band_index_component`*. Each of these components will display only one of the bands.
 
 Because our `band_index_component` is only displaying data from `band_input_component` we can make it a functional child component. Our `band_input_component` will hold all of the logic for the two components and pass down only the relevant information for `band_index_component` to display.
 
@@ -123,7 +126,7 @@ We'll import our reducer into `index.js` then start to build out our parent comp
 
 We have our store, our reducer, but no actual way to display or interact with the application. We'll create a new component in `src/components/band_input_component.js` and import it into our `index.js`. The last piece before we start actually building out our component is making sure our `index.js` mounts the `band_input_component` when our application initially loads. `Member how to do this?
 
-### <insert memberberries picture>
+![member-berries](https://res.cloudinary.com/teepublic/image/private/s--cJq1pb1m--/t_Preview/b_rgb:191919,c_limit,f_jpg,h_630,q_90,w_630/v1474073671/production/designs/685741_1.jpg)
 
 `ReactDOM.render(<BandInput />, document.getElementById('container'))`
 
@@ -154,7 +157,7 @@ ReactDOM.render(<BandInput store={store}/>, document.getElementById('container')
 
 Now we'll have access to `store` inside our components!
 
-### <insert adventure time "yeah boi" gif>
+![adventure-time](https://67.media.tumblr.com/8b4632d33e55d71de51bbdbf275d98ad/tumblr_n8bljrS9Fl1rom85wo1_500.gif)
 
 When creating a new component there is one question that you should always ask yourself: will this component be class based or just a functional component? In other words will our component hold a lot of logic to change state or will our component simply need to display information from state?
 
@@ -372,4 +375,3 @@ store.dispatch({})
 NOTE: If you're thinking "why should we re-render the whole application? Shouldn't we only want the specific component that displays the data to re-render?" The answer is... shut up. You're right. But, because our application consists of only one class based component, which doesn't display anyother information, we can just re-render the entire app. We'll see that, going forward, this is not the best course of action.
 
 That's it! You've done it! Your hot new band display app is ready for the world!
-
