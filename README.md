@@ -17,7 +17,7 @@ We will be building out a very simple concert venue band list. The application w
 
 Before we begin let's think about what is needed in React to build out this application. We'll need to mock out our components so that we have a template to build towards. This will help our application building process and shrink our need to "figure it out as we go" (possibly leading to later hours of refactoring). 
 
-As we can see in the picture above our application will need an input field to enter the bands and another html tag to display them. Because these two functions are seperate we can break them up into two different components. Also, though these functions are seperate (one requires user input and the other just displays the input) they are also related (they interact with the same exact data) meaning that one of our components will likely be a parent of the other. Let's name our two components:
+As we can see in the picture above our application will need an input field to enter the bands and another html element to display them. Because these two functionalities are seperate we can break them up into two different components. Also, though these functionalities are seperate (one requires user input and the other just displays the input) they are also related (they interact with the same exact data) meaning that one of our components will likely be a parent of the other. Let's name our two components:
 
 1. `band_input_component` will handle our band input logic.
 2. `band_index_component` will only diplay the bands.
@@ -33,6 +33,8 @@ The image above is a visual representation of how our components should be broke
 Because our `band_index_component` is only displaying data from `band_input_component` we can make it a functional child component. Our `band_input_component` will hold all of the logic for the two components and pass down only the relevant information for `band_index_component` to display.
 
 Last, but not least, we'll need one reducer `band_reducer` to update state when `store.dispatch(action)` is called. This reducer will only need to update our band array held in `store.state` whenever a new band is entered into our input field. This should be all we need to get started, so let's begin!
+
+## Part I: Store + Reducer 
 
 We'll start with our `index.js` file. When you open up the lab there should be some basic code already in the file. Now, because this is a flux application we know that our applications `state` will be held within a custom `store`. Let's bring in our store from a previous lab - it should look something like:
 
@@ -110,19 +112,36 @@ If we take a look back at our `createStore` function in `store.js` we'll notice 
 
 As we know, reducers are often just functions with giant switch statements in them. Their main purpose is to reset the `state` of our application. For our band app the only time we want to change the state of our application is when a user adds a new band to the list. To hold all of the information for our bands we'll want to store each band as an object. Meaning that our `state` will eventually be an array of band objects looking something like: `state = [{title: "The Beatles"}, {title: "Bob Marley and the Wailers"}]`.
 
-In our reducer above we can imagine that our `action.payload` will be the new band that we want to add to `state`. We use the spread operator (`...`) on `state` to "spread" out our original array of objects and add the new band object to the end of that array. Ex:
+In our reducer above we can imagine that our `action.payload` will be the new band that we want to add to `state`. We use the spread operator (`...`) on `state` to "spread" out our original array of objects, creating a copy of this original array with the added new band object. It's important to remember that **the reducer function should never mutate, or change, state**. It should instead return new copies of the previous state, plus whatever change you needed to make. 
+
+Ex:
 
 ```js
-	action.payload = {title: "The Killers"}
-	state = [{title: "The Beatles"}, {title: "Bob Marley and the Wailers"}]
-	
-	[...state, action.payload] 
-				=> [{title: "The Beatles"}, {title: "Bob Marley and the Wailers"}, {title: "The Killers"}]
+action.payload = {title: "The Killers"}
+state = [{title: "The Beatles"}, {title: "Bob Marley and the Wailers"}]
+
+[...state, action.payload] 
+	=> [{title: "The Beatles"}, {title: "Bob Marley and the Wailers"}, {title: "The Killers"}]
 ```
 
-We'll import our reducer into `index.js` then start to build out our parent component `band_input_component`.
+We'll import our reducer into `index.js` and pass it as an argument to our `createStore` function call:
 
-`band_input_component`
+```js
+// src/index.js
+
+import ReactDOM from 'react-dom';
+import { createStore } from './store';
+import bandReducer from './reducers/band_reducer'
+const store = createStore(bandReducer)
+
+ReactDOM.render(<InsertTopLevelComponent />, document.getElementById('container'))
+```
+
+Now we're ready to build out our parent component `band_input_component`.
+
+**Note:** A parent component is often refered to as a *container component*, and the pattern in which a container component renders child functional, or *presentational*, components, is called the ***container pattern***. 
+
+## Part II: The Top-Level Component
 
 We have our store, our reducer, but no actual way to display or interact with the application. We'll create a new component in `src/components/band_input_component.js` and import it into our `index.js`. The last piece before we start actually building out our component is making sure our `index.js` mounts the `band_input_component` when our application initially loads. `Member how to do this?
 
@@ -130,7 +149,7 @@ We have our store, our reducer, but no actual way to display or interact with th
 
 `ReactDOM.render(<BandInput />, document.getElementById('container'))`
 
-`ReactDom.render(TopComponent, HTMLElement)` takes the two arguments and ultimately renders the `TopComponent` into the specified `HTMLElement`. Great so our *index.js* should look like:
+`ReactDom.render(TopComponent, HTMLElement)` takes the two arguments and ultimately renders the `TopComponent` into the specified `HTMLElement`. So our *index.js* should look like:
 
 ```js
 import React from 'react';
@@ -146,7 +165,7 @@ const store = createStore(bandReducer);
 ReactDOM.render(<BandInput />, document.getElementById('container'))
 ```
 
-There is one crucial piece missing from our *`index.js`*. How will our *`band_input_component.js`* know about the applications `store`? It won't... yet. Inside *`band_input_component.js`* we want to be able to access our applications `store` through `props`. So we'll have to send down our `store` as a `prop` to *`band_input_component.js`*. 
+There is one crucial piece missing from our *`index.js`*. How will our *`band_input_component.js`* know about the application's `store`? It won't... yet. Inside *`band_input_component.js`* we want to be able to access our applications `store` through `props`. So we'll have to send down our `store` as a `prop` to *`band_input_component.js`*. 
 
 ```js
 ...
@@ -166,16 +185,16 @@ For our *`band_input_component.js`* will we need a class based component or a fu
 *`band_input_component.js`*
 
 ```js
-	import React from 'react';
-	
-	export default class BandInput extends React.Component {
-		render(){
-			return <div>I LIEK TEH BANDZ</div>
-		}
+import React from 'react';
+
+export default class BandInput extends React.Component {
+	render(){
+		return <div>I LIEK TEH BANDZ</div>
 	}
+}
 ```
 
-If we start up our server and navigate to our localhost root we should see how much we like the bands on the page. This is great... but not the purpose of our *`band_input_component.js`*. We want this component to hold an input field that will add a band to state when submitted. You know what that means FORM!
+If we start up our server and navigate to `http://localhost:8080` we should see how much we like the bands on the page. This is great... but not the purpose of our *`band_input_component.js`*. We want this component to hold an input field that will add a band to state when submitted. You know what that means FORM!
 
 *`band_input_component.js`*
 
@@ -187,14 +206,16 @@ If we start up our server and navigate to our localhost root we should see how m
 				<form>
 					<label>Enter Band: </label>
 					<input />
-					<button type"submit">Submit</button>
+					<button type="submit">Submit</button>
 				</form>
 			</div>
 		)
 	}
 ```
 
-Ok... now I'm *le* tired - we're done right? Pfff, no, we're about to get to the best part. We can enter a band into our input field on the page, but how will our application's `state` update to include the new band? We'll need to add an `onSubmit` event handler to our `<form>` tag. This handler will call a function that we define everytime the form is submitted. Let's try it out:
+Ok... now I'm *le* tired - we're done right? Pfff, no, we're about to get to the best part. We can enter a band into our input field on the page, but how will our application's `state` update to include the new band? We'll define a function to update the application's state and call that funcion every time the form is submitted.
+
+Let's try it out:
 
 *`band_input_component.js`*
 
@@ -216,7 +237,7 @@ onSubmit(){
 	}
 ```
 
-Open up your browser console, refresh the page and try typing something into your input field and submitting. What happened to your `console.log("NOMG I'm in teh onSubmit() functions")`? If you pay attention to your console when you submit you should see the console.log display before vanishing. Like most event handlers `onSubmit={function}` tries to refresh our page. How were we able to... prevent... this in the past? Did someone say `event.preventDefault()`? Suck up... But that's exactly right. We'll need to preventDefault in our callback function to avoid the page refresh. Luckily our event handlers pass in an event object as an argument to our callback.
+Open up your browser console, refresh the page and try typing something into your input field and submitting. What happened to your `console.log("NOMG I'm in the onSubmit() functions")`? If you pay attention to your console when you submit you should see the console.log display before vanishing. Like most event handlers `onSubmit={function}` tries to refresh our page. How were we able to... prevent... this in the past? Did someone say `event.preventDefault()`? Suck up... But that's exactly right. We'll need to preventDefault in our callback function to avoid the page refresh. Luckily our event handlers pass in an event object as an argument to our callback.
 
 *`band_input_component.js`*
 
@@ -228,7 +249,7 @@ onSubmit(event){
 }
 ```
 
-We are now successfully displaying our, very accurate, console log notifying us that the page did not refresh. In our `onSubmit()` function we want to add the new band entere into the input field into our application's state. 
+We are now successfully displaying our very accurate console log notifying us that the page did not refresh. In our `onSubmit()` function we want to add the new band entere into the input field into our application's state. 
 
 We know that our reducer was created for the sole purpose of updating state. First, how will we get into our reducer? Let's check out the `dispatch` function inside of store.
 
@@ -248,11 +269,23 @@ export const createStore = (reducer) => {
 
 If we call on `store.dispatch(action)` we will be able to get into our reducer. 
 
-Ok, so we know that somewhere inside of our `onSubmit` function we'll have to call on `store.dispatch(action)` to get into our reducer to ultimately update our application's `state`. With that knowledge what will be our `action` that we pass in as an arguement?
+Ok, so we know that somewhere inside of our `onSubmit` function we'll have to call on `store.dispatch(action)` to get into our reducer to ultimately update our application's `state`. 
 
-If we look back at the reducer we can see that the function takes in two arguments `state` and `action`. The reducer will grab `state` from the `dispatch` function in `store` and the `action` argument from where we call dispatch. Because we want our switch statement to end up in the `'ADD_BAND':` case we'll want our action to have a key value pair of `type: 'ADD_BAND'`. The last piece for our action will be the `payload` key, which should have the value of the band object we want to add to `state`. So we know that our action should be an object that looks something like: `action = {type: 'ADD_BAND', payload: {title: 'New Band'}}`.
+We know that a store needs to dispatch an action. An action is responsible for telling the reducer what code to enact, and sending any information that the reducer needs to enact that code. In this case, in order to add a new band, the store will have dispatch an action that tells the reducer *what to do* (i.e. add a new band to state please) and *how* to do it (i.e. here is the new band to add to state).
 
-In our `onSubmit` function we'll want to call our `store.dispatch({type: 'ADD_BAND', payload: {title: 'New Band'}}`. We passed in our `store` as a prop to the *`band_input_component.js`* component so in an ideal world within `onSubmit` we should be able to call `this.props.store.dispatch({type: 'ADD_BAND', payload: {title: 'New Band'}})`. But, we have one issue... because `onSubmit` is an event handler that calls the `onSubmit` function we lose score of our `class BandInput` `this`. Instead, right now, inside of `onSubmit` `this` refers to the event handler. We'll need to bind the appropriate `this` to our `onSubmit` function so that we can interact with the `props` that we wanted to pass down.
+Let's build out the action!
+
+### Building our Action 
+
+If we look back at the reducer we can see that the function takes in two arguments `state` and `action`. The reducer will grab `state` from the `dispatch` function in `store` and the `action` argument from where we call dispatch. Because we want our switch statement to end up in the `'ADD_BAND':` case we'll want our action to have a key value pair of `type: 'ADD_BAND'`. The last piece for our action will be the `payload` key, which should have the value of the band object we want to add to `state`. So we know that our action should be an object that looks something like: 
+
+```js
+action = {type: 'ADD_BAND', payload: {title: 'New Band'}}
+```
+
+In our `onSubmit` function we'll want to call our `store.dispatch({type: 'ADD_BAND', payload: {title: 'New Band'}}`. We passed in our `store` as a prop to the *`band_input_component.js`* component so in an ideal world within `onSubmit` we should be able to call `this.props.store.dispatch({type: 'ADD_BAND', payload: {title: 'New Band'}})`. 
+
+But, we have one issue... because `onSubmit` is an event handler that calls the `onSubmit` function we lose score of our `class BandInput` `this`. Instead, right now, inside of `onSubmit` `this` refers to the event handler. We'll need to bind the appropriate `this` to our `onSubmit` function so that we can interact with the `props`that we wanted to pass down.
 
 *`band_input_component.js`*
 
@@ -270,6 +303,36 @@ render(){
 }
 ```
 
+**Note:** Another option for `bind`-ing `this` is to do it in the `constructor` of the class:
+
+```js
+import React from 'react';
+
+export default class BandInput extends React.Component {
+  constructor(props) {
+  	super(props)
+  	this.onSubmit = this.onSubmit.bind(this)
+  }
+
+  onSubmit(e) {
+  	e.preventDefault()
+  	this.props.store.dispatch({type: 'ADD_BAND', payload: {title: 'New Band'}})
+  }
+
+  render(){
+    return(
+      <div>
+        <form onSubmit={this.onSubmit}>
+          <label>Enter Band: </label>
+          <input />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    )
+  }
+}
+```
+
 Shweet! Now we have the right `this` reference inside our `onSubmit` function.
 
 Let's now bring in our ideal code to dispatch the action and figure out how we should capture the input value for our band object. If we were using jQuery, or another language that interacts with event handlers, how would we go about grabbing our forms input value? We would be able to use our `event` object. Inside our `event` object we would call on `.target`, which refers to our form. Then we would need to grab our input field inside of that form with `.children[1]` (if you look at just `.children` you should see that it is an array containing each html tag within our `form` - `label`, `input`, `button`). Now that we have our input field selected all we want is the `.value` of that field. It should look something like:
@@ -283,11 +346,15 @@ onSubmit(event){
 }
 ```
 
-Now, if we were to look at the `state` of our app every time a new band is added it will be included in `state`!
+Now, if we were to look at the `state` of our app every time a new band is added, that new band will be included in `state`!
+
+## Part III: The Functional, or Presentational Component
 
 *`band_index_component.js`*
 
-Great! We've made it this far. We're about to input a new band and update our application's `state`. The last thing we want to do is output each band's title to a list. We already know that another component will handle the rendering of these bands to our page. This new component will, also, be a child of our *`band_input_component.js`* (meaning that it will be mounted within the parent component.
+Great! We've made it this far. We're about to input a new band and update our application's `state`. The last thing we want to do is output each band's title to a list. We already know that another component will handle the rendering of these bands to our page. 
+
+This new component will be a child of our *`band_input_component.js`* (meaning that it will be mounted within the parent, or *container*, component.
 
 Before we talk about how to use a new component to show the band's content let's talk about how we would show this data without a new component. Our application's `state` holds all of the information that we want to display. Inside of *`band_input_component.js`* we are able to call `this.props.store.getState()`, which should return our array of band objects. Unfortunately, we cannot just put this inside our JSX code and see all of the new objects appear. We would have to `map` through each of the objects in our `state` array and tell our JSX exactly how to display this information. 
 
@@ -326,7 +393,7 @@ render(){
 }
 ```
 
-Now, the only thing our new component will need to do is handle the output of our `li` with the appropriate information inside. As we mentioned before - is our *`band_index_component.js`* going to be a class based or function component? It's going to be a function component because it doesn't manipulate our application's `state`. With this in mind let's create our new component and use `export default` to export the function.
+Now, the only thing our new component will need to do is handle the output of our `li`with the appropriate information inside. As we mentioned before, we need to ask ourselves: is our *`band_index_component.js`* going to be a class based or functional component? It's going to be a functional component because it doesn't manipulate our application's `state`. With this in mind let's create our new component and use `export default` to export the function.
 
 *`band_index_component.js`*
 
@@ -372,6 +439,8 @@ store.subscribe(renderApp);
 store.dispatch({})
 ```
 
-NOTE: If you're thinking "why should we re-render the whole application? Shouldn't we only want the specific component that displays the data to re-render?" The answer is... shut up. You're right. But, because our application consists of only one class based component, which doesn't display anyother information, we can just re-render the entire app. We'll see that, going forward, this is not the best course of action.
+NOTE: If you're thinking "why should we re-render the whole application? Shouldn't we only want the specific component that displays the data to re-render?" The answer is...React is waaay ahead of you!
+
+React uses something called **the virtual DOM** to keep track of changes that have been made to state and the impact that those changes have on DOM. React will go through some super fast calculations, comparing the virtual DOM, which will re-render in its entirety, to the *actual* DOM, and then *only re-render the portion of the actual DOM that has actually changed*! That is super cool, in case that wasn't clear. We are very impressed. 
 
 That's it! You've done it! Your hot new band display app is ready for the world!
